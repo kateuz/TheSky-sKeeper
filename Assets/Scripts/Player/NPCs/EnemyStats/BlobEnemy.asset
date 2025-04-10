@@ -25,5 +25,5 @@ MonoBehaviour:
   chargeSpeed: 4
   meleeDetectDistance: 1
   damageAmount: 5
-  knockbackAngle: {x: 10, y: 1}
+  knockbackAngle: {x: 5, y: 1}
   knockbackForce: 11
