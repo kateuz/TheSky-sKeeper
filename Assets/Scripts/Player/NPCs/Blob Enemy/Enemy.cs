@@ -60,11 +60,6 @@ public class Enemy : MonoBehaviour, IDamageable
     {
 
         currentState.LogicUpdate();
-
-        if (currentHealth <= 0) 
-        {
-            Destroy(gameObject);    
-        }
     }
    
     void FixedUpdate()
@@ -171,10 +166,4 @@ public class Enemy : MonoBehaviour, IDamageable
     //}
 
     #endregion
-
-    public void Damagee(int damage)
-    {
-        currentHealth -= damage;
-        gameObject.GetComponent<Animation>().Play("Player_RedFlash");
-    }
 }
