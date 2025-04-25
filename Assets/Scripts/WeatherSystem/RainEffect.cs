@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class RainEffect : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] ParticleSystem rainParticles;
 
-    // Update is called once per frame
-    void Update()
+    public void SetRainIntensity(float emissionRate, PlayerMovement playerMovement)
     {
-        
+        if (rainParticles != null)
+        {
+            var emission = rainParticles.emission;
+            emission.rateOverTime = emissionRate;
+        }
     }
 }

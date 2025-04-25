@@ -12,7 +12,7 @@ public class WeatherEffectParameter
     [Range(0, 1000)] public float rainEmissionRate;
     [Range(0, 1000)] public float windSpeed;
     public bool sunRaysActive;
-    //public bool cloudActive;
-    //public bool rainActive;
+    public bool cloudActive;
+    public bool rainActive;
     public bool lightningActive;
 }

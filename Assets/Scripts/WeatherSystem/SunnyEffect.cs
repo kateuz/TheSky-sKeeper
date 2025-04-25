@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class SunnyEffect : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] GameObject sunRays;
+
+    public void ActivateSunnyEffect()
     {
-        
+        if (sunRays != null)
+            sunRays.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void DeactivateSunnyEffect()
     {
-        
+        if (sunRays == null)
+            sunRays.SetActive(false);
     }
 }

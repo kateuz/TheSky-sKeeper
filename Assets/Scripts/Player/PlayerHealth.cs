@@ -36,8 +36,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public void Heal(int healAmount)
     {
         currentHealth += healAmount;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // Clamp to max
-        slider.value = currentHealth; // Update slider
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        slider.value = currentHealth;
     }
 
     public void Damage(float damageAmount, float KBForce, Vector2 KBAngle) { }

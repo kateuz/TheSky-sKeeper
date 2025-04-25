@@ -9,14 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Menu.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/(Draft)TROPOSPHERE.unity
-    guid: eb3ae94ef38a70c41926a3a460ce5b2c
+    path: Assets/Scenes/P1Troposphere.unity
+    guid: 8477376d233e3a14aa5a7338aa176f6f
   - enabled: 1
     path: Assets/Scenes/P2Troposphere.unity
     guid: 97288c729ac8ead4b9ff7bd1a5d7ac78
   - enabled: 1
     path: Assets/Scenes/P3Troposphere.unity
-    guid: b2577883cd538a646a23bd9a9fdf8c87
+    guid: eb3ae94ef38a70c41926a3a460ce5b2c
   - enabled: 1
     path: Assets/Scenes/CutScene.unity
     guid: 5d6bd8845467f0644b7d15cdb4bfb602

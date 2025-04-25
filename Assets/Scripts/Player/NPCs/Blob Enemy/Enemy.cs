@@ -50,7 +50,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
         currentState = patrolState;
         currentState.Enter();
-   }
+        Debug.Log("Enemy state: " + currentState);
+    }
 
     private void Start()
     {
@@ -123,6 +124,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void SwitchState(EnemyBaseState newState)
     {
+        Debug.Log($"Switching from {currentState.GetType().Name} to {newState.GetType().Name}");
         currentState.Exit();
         currentState = newState;
         currentState.Enter();
@@ -160,15 +162,15 @@ public class Enemy : MonoBehaviour, IDamageable
         itemRb.AddTorque(torque, ForceMode2D.Impulse);
     }
 
-    //public void AnimationFinishedTrigger()
-    //{
-    //    currentState.AnimationFinishedTrigger();
-    //}
+    public void AnimationFinishedTrigger()
+    {
+        currentState.AnimationFinishedTrigger();
+    }
 
-    //public void AnimationAttackTrigger()
-    //{
-    //    currentState.AnimationAttackTrigger();
-    //}
+    public void AnimationAttackTrigger()
+    {
+        currentState.AnimationAttackTrigger();
+    }
 
     #endregion
 

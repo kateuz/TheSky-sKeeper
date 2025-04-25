@@ -25,12 +25,13 @@ public class WeatherEffects : MonoBehaviour
 
     void Start()
     {
-        SetWeatherEffect(WeatherState.State.Sunny);
+        //SetWeatherEffect(WeatherState.State.Sunny);
     }
 
     public void SetWeatherEffect(WeatherState.State weatherState)
     {
-        switch (weatherState) {
+        switch (weatherState)
+        {
             case WeatherState.State.Sunny:
                 targetWeatherEffectParameters = sunnyWeatherParameters;
                 break;
@@ -60,14 +61,15 @@ public class WeatherEffects : MonoBehaviour
             float t = Mathf.Clamp01(elapsedTime / transitionTime);
 
             currentWeatherEffectParameters = LerpWeatherEffectParameters(startWeatherEffectParameters, targetWeatherEffectParameters, t);
-            //UpdateWeatherEffects(currentWeatherEffectParameters);
+            UpdateWeatherEffects(currentWeatherEffectParameters, null);
             yield return null;
         }
         currentWeatherEffectParameters = targetWeatherEffectParameters;
-        //UpdateWeatherEffects(currentWeatherEffectParameters);
+        UpdateWeatherEffects(currentWeatherEffectParameters, null);
     }
 
-    private WeatherEffectParameter LerpWeatherEffectParameters(WeatherEffectParameter from, WeatherEffectParameter to, float t) {
+    private WeatherEffectParameter LerpWeatherEffectParameters(WeatherEffectParameter from, WeatherEffectParameter to, float t)
+    {
         WeatherEffectParameter result = new WeatherEffectParameter();
         result.cloudColor = Color.Lerp(from.cloudColor, to.cloudColor, t);
         result.cloudEmissionRate = Mathf.Lerp(from.cloudEmissionRate, to.cloudEmissionRate, t);
@@ -77,11 +79,36 @@ public class WeatherEffects : MonoBehaviour
         return result;
     }
 
-    //private void UpdateWeatherEffects(WeatherEffectParameter weatherEffectParameters)
+    private void UpdateWeatherEffects(WeatherEffectParameter weatherEffectParameters, PlayerMovement playerMovement)
+    {
+        if (cloudEffect != null)
+        {
+            cloudEffect.SetCloudDarkness(weatherEffectParameters.cloudColor);
+            cloudEffect.SetCloudEmissionRate(weatherEffectParameters.cloudEmissionRate);
+        }
+        if (rainEffect != null)
+        {
+            rainEffect.SetRainIntensity(weatherEffectParameters.rainEmissionRate, playerMovement);
+        }
+
+        if (lightningEffect != null)
+        {
+            if (weatherEffectParameters.lightningActive) lightningEffect.ActivateLightningEffect();
+            else lightningEffect.DeactivateLightningEffect();
+        }
+
+        if (sunnyEffect != null)
+        {
+            if (weatherEffectParameters.sunRaysActive) sunnyEffect.ActivateSunnyEffect();
+            else sunnyEffect.DeactivateSunnyEffect();
+        }
+    }
+
+    //private void UpdateWeatherEffects(WeatherEffectParameter weatherEffectParameters, PlayerMovement playerMovement)
     //{
     //    cloudEffect.SetCloudDarkness(weatherEffectParameters.cloudColor);
     //    cloudEffect.SetCloudEmissionRate(weatherEffectParameters.cloudEmissionRate);
-    //    rainEffect.SetRainIntensity(weatherEffectParameters.rainEmissionRate, PlayerMovement);
+    //    rainEffect.SetRainIntensity(weatherEffectParameters.rainEmissionRate, playerMovement);
 
     //    if (weatherEffectParameters.lightningActive) lightningEffect.ActivateLightningEffect();
     //    else lightningEffect.DeactivateLightningEffect();
@@ -111,3 +138,4 @@ public class WeatherEffects : MonoBehaviour
         return lightningEffect;
     }
 }
+

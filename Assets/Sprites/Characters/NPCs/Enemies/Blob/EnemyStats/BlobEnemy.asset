@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ad78814de360645be66265f8a14c92, type: 3}
   m_Name: BlobEnemy
   m_EditorClassIdentifier: 
-  maxHealth: 20
+  maxHealth: 50
   deathParticle: {fileID: 8377264150313898298, guid: d23ed0d9f815b3c439850d39d2f20f45, type: 3}
   deathDebris:
   - {fileID: 179400920551359009, guid: 69c60a6212c8f4b4494d44b0cb9169e0, type: 3}
@@ -23,7 +23,7 @@ MonoBehaviour:
   playerDetectedWaitTime: 1
   chargeTime: 2
   chargeSpeed: 4
-  meleeDetectDistance: 1
+  meleeDetectDistance: 0
   damageAmount: 5
-  knockbackAngle: {x: 10, y: 1}
-  knockbackForce: 11
+  knockbackAngle: {x: 5, y: 1}
+  knockbackForce: 8.82

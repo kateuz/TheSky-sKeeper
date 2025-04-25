@@ -21,7 +21,7 @@ public class Dialogue : MonoBehaviour
     private void Start()
     {
 
-        Debug.Log("Active? " + gameObject.activeInHierarchy);
+        Debug.Log("Active: " + gameObject.activeInHierarchy);
 
         /* GameObject someInstance = Instantiate(TrimmerPrefab);
          Dialogue ss = someInstance.GetComponent<Dialogue>();

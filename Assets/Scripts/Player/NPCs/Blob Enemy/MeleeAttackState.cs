@@ -45,13 +45,13 @@ public class MeleeAttackState : EnemyBaseState
         base.PhysicsUpdate();
     }
 
-    //public override void AnimationAttackTrigger()
-    //{
-    //    base.AnimationAttackTrigger();
-    //}
+    public override void AnimationAttackTrigger()
+    {
+        base.AnimationAttackTrigger();
+    }
 
-    //public override void AnimationFinishedTrigger()
-    //{
-    //    base.AnimationFinishedTrigger();
-    //}
+    public override void AnimationFinishedTrigger()
+    {
+        base.AnimationFinishedTrigger();
+    }
 }

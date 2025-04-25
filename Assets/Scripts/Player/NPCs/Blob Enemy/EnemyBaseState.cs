@@ -12,7 +12,7 @@ public class EnemyBaseState
         this.enemy = enemy;
         this.animationName = animationName;
     }
-
+        
     public virtual void Enter()
     {
         enemy.anim.SetBool(animationName, true);
@@ -25,8 +25,8 @@ public class EnemyBaseState
 
     public virtual void PhysicsUpdate() { }
 
-    //public virtual void AnimationFinishedTrigger() { }
+    public virtual void AnimationFinishedTrigger() { }
 
-    //public virtual void AnimationAttackTrigger() { }
+    public virtual void AnimationAttackTrigger() { }
 
 }

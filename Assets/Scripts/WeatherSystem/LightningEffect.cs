@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class LightningEffect : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] GameObject lightningFlash;
+
+    public void ActivateLightningEffect()
     {
-        
+        if (lightningFlash != null)
+            lightningFlash.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void DeactivateLightningEffect()
     {
-        
+        if (lightningFlash == null)
+            lightningFlash.SetActive(false);
     }
 }
