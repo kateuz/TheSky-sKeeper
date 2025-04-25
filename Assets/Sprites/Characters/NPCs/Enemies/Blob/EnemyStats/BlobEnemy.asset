@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: BlobEnemy
   m_EditorClassIdentifier: 
   maxHealth: 50
-  deathParticle: {fileID: 8377264150313898298, guid: d23ed0d9f815b3c439850d39d2f20f45, type: 3}
+  deathParticle: {fileID: 38875062278680072, guid: 491a8720f07a0bb44ab64b58dd544954, type: 3}
   deathDebris:
-  - {fileID: 179400920551359009, guid: 69c60a6212c8f4b4494d44b0cb9169e0, type: 3}
+  - {fileID: 38875062278680072, guid: 491a8720f07a0bb44ab64b58dd544954, type: 3}
   speed: 2
   cliffCheckDistance: 1.5
   playerDetectDistance: 5

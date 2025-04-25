@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Trimmer
   - Enemy
+  - Wand
   layers:
   - Default
   - TransparentFX

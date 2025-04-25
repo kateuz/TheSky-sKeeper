@@ -9,15 +9,25 @@ public class WeatherWand : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            //tempController.AdjustTemperature(+5f);
-            weatherController.AdjustTemperature(+5f);
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            //tempController.AdjustTemperature(-5f);
-            weatherController.AdjustTemperature(-5f);
-        }
+        //if (Input.GetKeyDown(KeyCode.UpArrow))
+        //{
+        //    //tempController.AdjustTemperature(+5f);
+        //    weatherController.AdjustTemperature(+5f);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.DownArrow))
+        //{
+        //    //tempController.AdjustTemperature(-5f);
+        //    weatherController.AdjustTemperature(-5f);
+        //}
+    }
+
+    public void IncreaseTemp()
+    {
+        weatherController.AdjustTemperature(+5f);
+    }
+
+    public void DecreaseTemp()
+    {
+        weatherController.AdjustTemperature(-5f);
     }
 }

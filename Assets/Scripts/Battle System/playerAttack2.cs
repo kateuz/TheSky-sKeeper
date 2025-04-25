@@ -21,7 +21,34 @@ public class playerAttack2 : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown("k") && !attacking) 
+        //    if (Input.GetKeyDown("k") && !attacking)
+        //    {
+        //        attacking = true;
+        //        attackTimer = attackCd;
+
+        //        attackTrigger.enabled = true;
+        //    }
+
+        //    if (attacking)
+        //    {
+        //        if (attackTimer > 0)
+        //        {
+        //            attackTimer -= Time.deltaTime;
+        //        }
+        //        else
+        //        {
+        //            attacking = false;
+        //            attackTrigger.enabled = false;
+        //        }
+        //    }
+
+        //    anim.SetBool("isAttacking", attacking);
+        //}
+    }
+
+    public void Attack()
+    {
+        if (!attacking)
         {
             attacking = true;
             attackTimer = attackCd;
@@ -34,7 +61,8 @@ public class playerAttack2 : MonoBehaviour
             if (attackTimer > 0)
             {
                 attackTimer -= Time.deltaTime;
-            } else
+            }
+            else
             {
                 attacking = false;
                 attackTrigger.enabled = false;
