@@ -12,16 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ad78814de360645be66265f8a14c92, type: 3}
   m_Name: BlobEnemy
   m_EditorClassIdentifier: 
-  maxHealth: 50
+  maxHealth: 30
   deathParticle: {fileID: 38875062278680072, guid: 491a8720f07a0bb44ab64b58dd544954, type: 3}
   deathDebris:
   - {fileID: 38875062278680072, guid: 491a8720f07a0bb44ab64b58dd544954, type: 3}
+  - {fileID: 5211442186248481188, guid: f11e25167bf86e5488e75b6042862783, type: 3}
   speed: 2
   cliffCheckDistance: 1.5
   playerDetectDistance: 5
   detectionPauseTime: 1
-  playerDetectedWaitTime: 1
-  chargeTime: 2
+  playerDetectedWaitTime: 0
+  chargeTime: 4
   chargeSpeed: 4
   meleeDetectDistance: 0
   damageAmount: 5

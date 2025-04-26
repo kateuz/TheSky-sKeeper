@@ -9,6 +9,7 @@ TagManager:
   - Trimmer
   - Enemy
   - Wand
+  - Item
   layers:
   - Default
   - TransparentFX

@@ -5,6 +5,8 @@ using TMPro;
 
 public class Dialogue : MonoBehaviour
 {
+    public Quest questToGive;
+    private QuestManager questManager;
 
     public TextMeshProUGUI textDisplay;
     public string[] sentences;
@@ -26,6 +28,8 @@ public class Dialogue : MonoBehaviour
         /* GameObject someInstance = Instantiate(TrimmerPrefab);
          Dialogue ss = someInstance.GetComponent<Dialogue>();
          ss.StartCoroutine(ss.CloseDialogue()); */
+
+        questManager = FindObjectOfType<QuestManager>();
 
         dialogueBox.SetActive(false);
 
@@ -68,6 +72,10 @@ public class Dialogue : MonoBehaviour
         }
         else
         {
+            GiveQuest();
+            //FindObjectOfType<QuestManager>().StartDepleting();
+            //Debug.Log("Oxygen decreasing..");
+
             StartCoroutine(CloseDialogue());
         }
     }
@@ -111,4 +119,52 @@ public class Dialogue : MonoBehaviour
 
     }
 
+    public void GiveQuest()
+    {
+        if (questToGive != null)
+        {
+            questToGive.ActivateQuest();
+        }
+        else
+        {
+            Debug.LogWarning("questToGive is null!");
+        }
+
+        if (questManager != null)
+        {
+            Debug.Log("Quest Manager found!");
+
+            if (questManager.questUI != null)
+            {
+                Debug.Log("Quest UI found, setting active!");
+                questManager.questUI.SetActive(true);
+            }
+            else
+            {
+                Debug.LogWarning("Quest UI is null!");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Quest Manager is null!");
+        }
+
+        FindObjectOfType<QuestManager>().StartDepleting();
+        Debug.Log("Quest Given!");
+    }
+
+    //    questToGive.ActivateQuest();
+
+    //    if (questManager != null)
+    //    {
+    //        if (questManager.questUI != null)
+    //            questManager.questUI.SetActive(true);
+
+    //        if (questManager.oxygenTxt != null)
+    //            questManager.oxygenTxt.gameObject.SetActive(true);
+    //    }
+
+    //    questManager.StartDepleting();
+    //    Debug.Log("Quest Given!");
+    //}
 }

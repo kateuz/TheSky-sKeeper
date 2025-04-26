@@ -32,7 +32,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: EnemyBlob 1
+  m_Name: EnemyBlob 2
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: patrol
@@ -54,14 +54,14 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
---- !u!1102 &1995713597379905780
+--- !u!1102 &1766804469024412110
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RedFlash
+  m_Name: SmogPatrol
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -74,7 +74,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: a927bfa3bf53ac94197c18db1ea16530, type: 2}
+  m_Motion: {fileID: 7400000, guid: c024b74ae85c288469336826d55f15d1, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -93,7 +93,7 @@ AnimatorStateMachine:
     m_State: {fileID: -2326276415737294402}
     m_Position: {x: 240, y: 110, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 1995713597379905780}
+    m_State: {fileID: 1766804469024412110}
     m_Position: {x: 275, y: 175, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []

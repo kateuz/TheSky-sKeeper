@@ -35,6 +35,8 @@ public class Quest : MonoBehaviour
         currentColor = completedColor;
         questItem.color = completedColor;
         arrow.gameObject.SetActive(false);
+
+        FindObjectOfType<QuestManager>().EquipOxygenMask();
     }
 
     public void OnQuestClick()
@@ -45,5 +47,11 @@ public class Quest : MonoBehaviour
             quest.questItem.color = quest.currentColor;
         }
         questItem.color  = activeColor;
+    }
+
+    public void ActivateQuest()
+    {
+        questItem.gameObject.SetActive(true);
+        OnQuestClick();
     }
 }
