@@ -23,7 +23,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public int facingDirection = 1;
     
-
     public float stateTime;
 
     public StatsSO stats;
@@ -172,11 +171,19 @@ public class Enemy : MonoBehaviour, IDamageable
         currentState.AnimationAttackTrigger();
     }
 
+    IEnumerator FlashRed()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        sr.color = Color.white;
+    }
+
     #endregion
 
     public void Damage2(int damage)
     {
         currentHealth -= damage;
-        gameObject.GetComponent<Animation>().Play("RedFlash");
+        StartCoroutine(FlashRed());
     }
 }

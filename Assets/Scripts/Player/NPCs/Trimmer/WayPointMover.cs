@@ -44,7 +44,7 @@ public class WayPointMover : MonoBehaviour
     }
     void Update()
     {
-        if (isWaiting || waypoints == null || waypoints.Length == 0)
+        if (isWaiting || waypoints == null || waypoints.Length == 0) 
         {
             return;
         }

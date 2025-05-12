@@ -11,9 +11,18 @@ public class WeatherController : MonoBehaviour {
     public GameObject sunny;
     public GameObject stormy;
 
+    public bool isTornadoZone = false;
+
+    public TornadoController tornadoController;
+
     // Start is called before the first frame update
     void Start()
     {
+        if (GameManager.Instance != null)
+        {
+            currentTemperature = GameManager.Instance.savedTemp;
+        }
+
         UpdateWeatherBasedOnTemperature();
     }
 
@@ -28,10 +37,23 @@ public class WeatherController : MonoBehaviour {
         currentTemperature += amount;
         currentTemperature = Mathf.Clamp(currentTemperature, -20f, 100f); //limits
 
-        UpdateWeatherBasedOnTemperature();
+        if (!isTornadoZone) 
+        {
+            UpdateWeatherBasedOnTemperature();
+        }
+
+        if (tornadoController != null)
+        {
+            tornadoController.SetTemp(currentTemperature);
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.savedTemp = currentTemperature;
+        }
     }
 
-    private void UpdateWeatherBasedOnTemperature()
+    public void UpdateWeatherBasedOnTemperature()
     {
         if (currentTemperature <= 10f)
         {
@@ -49,6 +71,13 @@ public class WeatherController : MonoBehaviour {
         {
             SetWeatherState("Stormy");
         }
+
+        if (tornadoController != null)
+        {
+            tornadoController.SetTemp(currentTemperature);
+        }
+
+        FindObjectOfType<WeatherUIManager>()?.UpdateWeatherUI();
     }
 
 
@@ -86,6 +115,7 @@ public class WeatherController : MonoBehaviour {
 
         }
 
+        GameManager.Instance.savedWeather = currentWeatherState;
 
         //switch (currentWeatherState)
         //{

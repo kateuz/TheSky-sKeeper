@@ -6,6 +6,8 @@ using TMPro;
 
 public class Quest : MonoBehaviour
 {
+    public bool isLightningRod = false;
+
     public Image questItem;
     public Color completedColor;
     public Color activeColor;
@@ -31,12 +33,25 @@ public class Quest : MonoBehaviour
     }
     void FinishedQuest()
     {
-        questItem.GetComponent<Button>().interactable = false;
-        currentColor = completedColor;
-        questItem.color = completedColor;
-        arrow.gameObject.SetActive(false);
+        if (isLightningRod)
+        {
+            PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
 
-        FindObjectOfType<QuestManager>().EquipOxygenMask();
+            if (playerHealth != null)
+            {
+                playerHealth.isProtected = true;
+                Debug.Log("somaksis ka uli");
+            }
+        }
+        else
+        {
+            questItem.GetComponent<Button>().interactable = false;
+            currentColor = completedColor;
+            questItem.color = completedColor;
+            arrow.gameObject.SetActive(false);
+
+            FindObjectOfType<QuestManager>().EquipOxygenMask();
+        }
     }
 
     public void OnQuestClick()

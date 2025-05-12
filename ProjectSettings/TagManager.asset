@@ -10,6 +10,11 @@ TagManager:
   - Enemy
   - Wand
   - Item
+  - DataLog
+  - Scanner
+  - Portal
+  - Meteor
+  - ShieldPickup
   layers:
   - Default
   - TransparentFX
@@ -22,7 +27,7 @@ TagManager:
   - Player
   - Enemy
   - Item
-  - 
+  - DataLog
   - 
   - 
   - 

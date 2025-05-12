@@ -7,7 +7,7 @@ public class QuestManager : MonoBehaviour
 {
     public TextMeshProUGUI oxygenTxt;
     public GameObject questUI;
-    //public GameObject oxygenText;
+    public GameObject oxygenText;
 
     public float oxygenLvl = 100f; //starting
     public float oxygenDepletionRate = 5f; //how fast oxygen drains
@@ -21,52 +21,67 @@ public class QuestManager : MonoBehaviour
 
     void Start()
     {
-        if(questUI != null)
+        if (GameManager.Instance != null)
+        {
+            oxygenLvl = GameManager.Instance.oxygenLevel;
+        }
+
+        if (questUI != null)
         {
             questUI.SetActive(false);
         }
 
-        if (oxygenTxt != null) 
+        if (oxygenTxt != null)
         {
             oxygenTxt.gameObject.SetActive(true);
+            oxygenTxt.text = "Oxygen: " + Mathf.RoundToInt(oxygenLvl) + "%";
         }
 
         playerHealth = FindObjectOfType<PlayerHealth>();
 
         isDepleting = true;
     }
+
     void Update()
     {
-        if (isDepleting && !hasOxygenMask)
+    if (GameManager.Instance != null)
+    {
+        GameManager.Instance.oxygenLevel = oxygenLvl;
+    }
+
+    if (isDepleting && !hasOxygenMask)
+    {
+        oxygenLvl -= oxygenDepletionRate * Time.deltaTime;
+        oxygenLvl = Mathf.Clamp(oxygenLvl, 0, 100);
+
+        if (oxygenTxt != null)
         {
-            oxygenLvl -= oxygenDepletionRate * Time.deltaTime;
-            oxygenLvl = Mathf.Clamp(oxygenLvl, 0, 100);
+            oxygenTxt.text = "Oxygen: " + Mathf.RoundToInt(oxygenLvl) + "%";
+        }
 
-            if (oxygenTxt != null)
-            {
-                oxygenTxt.text = "Oxygen: " + Mathf.RoundToInt(oxygenLvl) + "%";
-            }
-
-            if (oxygenLvl <= 0)
-            {
-                Suffocate();
-                Debug.Log("Suffocated..");
-            }
+        if (oxygenLvl <= 0)
+        {
+            Suffocate();
+            Debug.Log("Suffocating!T%$%$!!");
         }
     }
+}
 
     void Suffocate()
     {
-        if ( playerHealth != null ) 
+        if (hasOxygenMask) return; // Don't suffocate with the mask!
+
+        if (playerHealth != null)
         {
             suffocationTimer += Time.deltaTime;
-            if ( suffocationTimer >= 1f ) //damage every second
+            if (suffocationTimer >= 1f) //damage every second
             {
                 playerHealth.Damage(dmgRate);
                 suffocationTimer = 0f;
             }
         }
     }
+
 
     public void StartDepleting()
     {

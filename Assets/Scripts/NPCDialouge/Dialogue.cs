@@ -14,29 +14,42 @@ public class Dialogue : MonoBehaviour
     public float typingSpeed;
 
     public GameObject continueButton;
-    public Animator textDisplayAnim;
+    public GameObject TrimmerPrefab;
     public GameObject dialogueBox;
+    public GameObject leftMoveBtn;
+    public GameObject rightMoveBtn;
+    public GameObject jumpBtn;
+    public GameObject scanBtn;
+    public GameObject tempUpBtn;
+    public GameObject tempDownBtn;
+    public GameObject attackBtn;
+    public GameObject interactButton;
 
     private bool isTalking = false;
+    private bool isInRange = false;
+    public TextMeshProUGUI continueBtnText;
 
-    public GameObject TrimmerPrefab;
+    public Animator textDisplayAnim;
+
     private void Start()
     {
-
-        Debug.Log("Active: " + gameObject.activeInHierarchy);
-
-        /* GameObject someInstance = Instantiate(TrimmerPrefab);
-         Dialogue ss = someInstance.GetComponent<Dialogue>();
-         ss.StartCoroutine(ss.CloseDialogue()); */
-
         questManager = FindObjectOfType<QuestManager>();
-
         dialogueBox.SetActive(false);
-
         continueButton.SetActive(false);
+        if (interactButton != null)
+        {
+            interactButton.SetActive(false);
+        }
+
+        if (continueBtnText != null)
+        {
+            continueBtnText.text = "Next";
+        }
+        else
+        {
+            Debug.LogWarning("Continue button text component is missing!");
+        }
     }
-
-
 
     void Update()
     {
@@ -45,8 +58,6 @@ public class Dialogue : MonoBehaviour
             continueButton.SetActive(true);
         }
     }
-
-
 
     IEnumerator Type()
     {
@@ -57,7 +68,6 @@ public class Dialogue : MonoBehaviour
             textDisplay.text += letter;
             yield return new WaitForSeconds(typingSpeed);
         }
-
         continueButton.SetActive(true);
     }
 
@@ -68,45 +78,85 @@ public class Dialogue : MonoBehaviour
             index++;
             textDisplay.text = "";
             continueButton.SetActive(false);
+
+            if (index == sentences.Length - 1 && continueBtnText != null)
+            {
+                continueBtnText.text = "Done";
+            }
+
+            StopAllCoroutines();
             StartCoroutine(Type());
         }
         else
         {
             GiveQuest();
-            //FindObjectOfType<QuestManager>().StartDepleting();
-            //Debug.Log("Oxygen decreasing..");
-
             StartCoroutine(CloseDialogue());
         }
     }
 
-    void StartDialogue()
+    public void StartDialogue()
     {
         if (!isTalking)
         {
             isTalking = true;
+            PlayerMovement.isDialogueActive = true;
             dialogueBox.SetActive(true);
             continueButton.SetActive(false);
+            if (interactButton != null)
+            {
+                interactButton.SetActive(false);
+            }
             index = 0;
-            StartCoroutine(Type());
+
+            if (gameObject.activeInHierarchy)
+            {
+                StopAllCoroutines();
+                StartCoroutine(Type());
+            }
         }
     }
 
-
+    private void SetButtonsActive(bool active)
+    {
+        if (leftMoveBtn != null) leftMoveBtn.SetActive(active);
+        if (rightMoveBtn != null) rightMoveBtn.SetActive(active);
+        if (jumpBtn != null) jumpBtn.SetActive(active);
+        if (scanBtn != null) scanBtn.SetActive(active);
+        if (tempUpBtn != null) tempUpBtn.SetActive(active);
+        if (tempDownBtn != null) tempDownBtn.SetActive(active);
+        if (attackBtn != null) attackBtn.SetActive(active);
+    }
 
     IEnumerator CloseDialogue()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f); // Small delay to ensure everything is processed
+        
         dialogueBox.SetActive(false);
-        isTalking = false;
         continueButton.SetActive(false);
+        isTalking = false;
+        PlayerMovement.isDialogueActive = false;
+
+        // Show interact button if player is still in range
+        if (isInRange && interactButton != null)
+        {
+            interactButton.SetActive(true);
+        }
+
+        if (continueBtnText != null)
+        {
+            continueBtnText.text = "Next";
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Killian") && !isTalking)
+        if (other.CompareTag("Killian"))
         {
-            StartDialogue();
+            isInRange = true;
+            if (!isTalking && interactButton != null)
+            {
+                interactButton.SetActive(true);
+            }
         }
     }
 
@@ -114,9 +164,16 @@ public class Dialogue : MonoBehaviour
     {
         if (other.CompareTag("Killian"))
         {
-            StartCoroutine(CloseDialogue());
+            isInRange = false;
+            if (interactButton != null)
+            {
+                interactButton.SetActive(false);
+            }
+            if (isTalking)
+            {
+                StartCoroutine(CloseDialogue());
+            }
         }
-
     }
 
     public void GiveQuest()
@@ -132,11 +189,8 @@ public class Dialogue : MonoBehaviour
 
         if (questManager != null)
         {
-            Debug.Log("Quest Manager found!");
-
             if (questManager.questUI != null)
             {
-                Debug.Log("Quest UI found, setting active!");
                 questManager.questUI.SetActive(true);
             }
             else
@@ -152,19 +206,4 @@ public class Dialogue : MonoBehaviour
         FindObjectOfType<QuestManager>().StartDepleting();
         Debug.Log("Quest Given!");
     }
-
-    //    questToGive.ActivateQuest();
-
-    //    if (questManager != null)
-    //    {
-    //        if (questManager.questUI != null)
-    //            questManager.questUI.SetActive(true);
-
-    //        if (questManager.oxygenTxt != null)
-    //            questManager.oxygenTxt.gameObject.SetActive(true);
-    //    }
-
-    //    questManager.StartDepleting();
-    //    Debug.Log("Quest Given!");
-    //}
 }
