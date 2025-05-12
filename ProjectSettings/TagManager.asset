@@ -15,6 +15,7 @@ TagManager:
   - Portal
   - Meteor
   - ShieldPickup
+  - FrostZone
   layers:
   - Default
   - TransparentFX
