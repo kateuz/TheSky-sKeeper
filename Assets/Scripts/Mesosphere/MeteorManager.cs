@@ -6,18 +6,14 @@ public class MeteorManager : MonoBehaviour
     [Header("Meteor Settings")]
     [SerializeField] private GameObject meteorPrefab;
     [SerializeField] private float spawnInterval = 5f;
-    [SerializeField] private float minSpawnHeight = 10f;
-    [SerializeField] private float maxSpawnHeight = 15f;
+    [SerializeField] private float spawnHeight = 10f; // Fixed spawn height
     [SerializeField] private float meteorSpeed = 5f;
     [SerializeField] private float damageAmount = 10f;
     [SerializeField] private GameObject hitEffectPrefab;
 
-    [Header("Spawn Area")]
-    [SerializeField] private float minX = -10f;
-    [SerializeField] private float maxX = 10f;
-
     private Transform playerTransform;
     private MesospherePlayerMovement playerMovement;
+    private Camera mainCamera;
 
     private void Start()
     {
@@ -33,6 +29,13 @@ public class MeteorManager : MonoBehaviour
             Debug.LogError("Player not found! Make sure the player has the 'Killian' tag.");
         }
 
+        // Get the main camera
+        mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            Debug.LogError("Main camera not found!");
+        }
+
         StartCoroutine(SpawnMeteors());
     }
 
@@ -42,21 +45,32 @@ public class MeteorManager : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnInterval);
 
-            if (playerTransform == null) continue;
+            if (playerTransform == null || mainCamera == null) continue;
 
-            // Random spawn position
-            float randomX = Random.Range(minX, maxX);
-            float spawnHeight = Random.Range(minSpawnHeight, maxSpawnHeight);
-            Vector3 spawnPosition = new Vector3(randomX, spawnHeight, 0f);
+            // Spawn position at the top center of the camera view
+            Vector3 spawnPosition = mainCamera.transform.position + new Vector3(0f, spawnHeight, 0f);
 
             // Spawn meteor
             GameObject meteor = Instantiate(meteorPrefab, spawnPosition, Quaternion.identity);
+            meteor.transform.SetParent(mainCamera.transform, true); // Make it a child of the camera
             
-            // Add velocity
+            // Calculate direction to player
+            Vector2 directionToPlayer = (playerTransform.position - spawnPosition).normalized;
+            
+            // Add velocity towards player
             Rigidbody2D rb = meteor.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                rb.velocity = Vector2.down * meteorSpeed;
+                rb.velocity = directionToPlayer * meteorSpeed;
+            }
+
+            // Ensure meteor is fully opaque
+            SpriteRenderer sr = meteor.GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                Color color = sr.color;
+                color.a = 1f;
+                sr.color = color;
             }
 
             // Add damage component

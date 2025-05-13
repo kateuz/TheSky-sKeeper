@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9476a7c0802dc4a48a71f7cd7cf4dbb0, type: 3}
+  m_Name: ProjectileEnemyStats
+  m_EditorClassIdentifier: 
+  maxHealth: 20
+  deathParticle: {fileID: 0}
+  deathDebris: []
+  speed: 4
+  cliffCheckDistance: 1.5
+  playerDetectDistance: 5
+  detectionPauseTime: 1
+  playerDetectedWaitTime: 0
+  chargeTime: 4
+  chargeSpeed: 4
+  meleeDetectDistance: 0
+  damageAmount: 5
+  knockbackAngle: {x: 5, y: 1}
+  knockbackForce: 8.82
+  rangedAttackDistance: 5
+  projectileSpeed: 5
+  projectileDamage: 10

@@ -35,6 +35,11 @@ public class Enemy : MonoBehaviour, IDamageable
     public float dropForce;
     public float torque;
 
+    //private float stuckTimer = 0f;
+    //private float stuckCheckInterval = 0.5f; // How often to check (seconds)
+    //private float stuckVelocityThreshold = 0.05f; // Considered stuck if below this
+    //public float jumpForce = 5f; // You can expose this in the Inspector
+
     #endregion
 
     #region Unity Callbacks
@@ -186,4 +191,10 @@ public class Enemy : MonoBehaviour, IDamageable
         currentHealth -= damage;
         StartCoroutine(FlashRed());
     }
+
+    //public bool IsGrounded()
+    //{
+    //    // You can use your own ground check logic here
+    //    return Physics2D.Raycast(transform.position, Vector2.down, 0.1f, groundLayer);
+    //}
 }

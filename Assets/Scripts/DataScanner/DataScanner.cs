@@ -5,6 +5,7 @@ using UnityEngine;
 public class DataScanner : MonoBehaviour
 {
     public PlayerMovement playerMovement;
+    public MesospherePlayerMovement mesospherePlayerMovement;
 
     public GameObject learningPanel;
     public GameObject fogPs;
@@ -31,6 +32,7 @@ public class DataScanner : MonoBehaviour
             playerMovement.jumpPower = 8;
 
         }
+
     }
     //    public float scanRadius = 10f;
 
@@ -75,3 +77,4 @@ public class DataScanner : MonoBehaviour
 
 
 }
+

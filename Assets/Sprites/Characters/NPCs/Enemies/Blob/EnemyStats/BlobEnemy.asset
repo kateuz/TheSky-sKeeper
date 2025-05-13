@@ -22,9 +22,9 @@ MonoBehaviour:
   playerDetectDistance: 5
   detectionPauseTime: 1
   playerDetectedWaitTime: 0
-  chargeTime: 4
+  chargeTime: 4.5
   chargeSpeed: 4
   meleeDetectDistance: 0
-  damageAmount: 5
+  damageAmount: 20
   knockbackAngle: {x: 5, y: 1}
   knockbackForce: 8.82

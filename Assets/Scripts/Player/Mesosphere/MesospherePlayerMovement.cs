@@ -1,12 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Rendering.Universal;
 
-public class MesospherePlayerMovement : MonoBehaviour
+public class MesospherePlayerMovement : MonoBehaviour, IDamageable
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpPower = 4f;
+    [SerializeField] private int maxJumps = 3; // Maximum number of jumps allowed
+    private int jumpsRemaining; // Track remaining jumps
     [SerializeField] private float lowPressureJumpMultiplier = 0.5f;
     [SerializeField] private float lowPressureSpeedMultiplier = 0.7f;
 
@@ -31,6 +34,11 @@ public class MesospherePlayerMovement : MonoBehaviour
 
     [Header("Meteor Shield")]
     [SerializeField] private GameObject meteorShield;
+    [SerializeField] private Light2D shieldLight;
+    [SerializeField] private float shieldPulseSpeed = 1f;
+    [SerializeField] private float shieldMinIntensity = 0.5f;
+    [SerializeField] private float shieldMaxIntensity = 1f;
+    [SerializeField] private Color shieldColor = new Color(0.4f, 0.6f, 1f, 1f);
     public bool isShieldActive { get; private set; } = false;
 
     [Header("Weather Wand")]
@@ -67,6 +75,7 @@ public class MesospherePlayerMovement : MonoBehaviour
         // Store original movement values
         originalMoveSpeed = moveSpeed;
         originalJumpPower = jumpPower;
+        jumpsRemaining = maxJumps; // Initialize jumps
 
         // Initialize UI elements
         if (frostOverlay != null)
@@ -87,6 +96,12 @@ public class MesospherePlayerMovement : MonoBehaviour
         if (meteorShield != null)
         {
             meteorShield.SetActive(false);
+        }
+        if (shieldLight != null)
+        {
+            shieldLight.gameObject.SetActive(false);
+            shieldLight.color = shieldColor;
+            shieldLight.intensity = shieldMinIntensity;
         }
 
         // Initialize weather controller
@@ -117,7 +132,7 @@ public class MesospherePlayerMovement : MonoBehaviour
         }
 
         // Handle jump input
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && jumpsRemaining > 0)
         {
             Jump();
         }
@@ -127,6 +142,19 @@ public class MesospherePlayerMovement : MonoBehaviour
         {
             UpdateFrostEffect();
         }
+
+        // Update shield light effect
+        if (isShieldActive && shieldLight != null && shieldLight.gameObject.activeSelf)
+        {
+            UpdateShieldLight();
+        }
+    }
+
+    private void UpdateShieldLight()
+    {
+        // Pulse the light intensity
+        float pulse = Mathf.PingPong(Time.time * shieldPulseSpeed, 1f);
+        shieldLight.intensity = Mathf.Lerp(shieldMinIntensity, shieldMaxIntensity, pulse);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -148,8 +176,8 @@ public class MesospherePlayerMovement : MonoBehaviour
         {
             if (!isFrostZoneDefrosted)
             {
-                // Prevent exit if not defrosted
-                transform.position = collision.transform.position;
+                // Instead of forcing position, just keep the player in the zone
+                isInFrostZone = true;
             }
             else
             {
@@ -163,9 +191,12 @@ public class MesospherePlayerMovement : MonoBehaviour
         isInFrostZone = true;
         isFrostZoneDefrosted = false;
         
-        // Apply frost zone movement restrictions
-        moveSpeed = originalMoveSpeed * frostZoneMoveSpeedMultiplier;
-        jumpPower = originalJumpPower * frostZoneJumpMultiplier;
+        // Only apply movement restrictions if we're grounded
+        if (isGrounded)
+        {
+            moveSpeed = originalMoveSpeed * frostZoneMoveSpeedMultiplier;
+            jumpPower = originalJumpPower * frostZoneJumpMultiplier;
+        }
         
         // Show and start frost effect
         if (frostOverlay != null)
@@ -208,6 +239,12 @@ public class MesospherePlayerMovement : MonoBehaviour
         {
             meteorShield.SetActive(true);
         }
+        if (shieldLight != null)
+        {
+            shieldLight.gameObject.SetActive(true);
+            shieldLight.color = shieldColor;
+            shieldLight.intensity = shieldMinIntensity;
+        }
         // Make meteors semi-transparent
         GameObject[] meteors = GameObject.FindGameObjectsWithTag("Meteor");
         foreach (GameObject meteor in meteors)
@@ -228,6 +265,10 @@ public class MesospherePlayerMovement : MonoBehaviour
         if (meteorShield != null)
         {
             meteorShield.SetActive(false);
+        }
+        if (shieldLight != null)
+        {
+            shieldLight.gameObject.SetActive(false);
         }
         // Restore meteor opacity
         GameObject[] meteors = GameObject.FindGameObjectsWithTag("Meteor");
@@ -299,11 +340,20 @@ public class MesospherePlayerMovement : MonoBehaviour
 
     public void Jump()
     {
-        // Remove low pressure jump multiplier
-        rb.velocity = new Vector2(rb.velocity.x, jumpPower);
-        if (animator != null)
+        // Don't allow jumping in frost zone
+        if (isInFrostZone && !isFrostZoneDefrosted)
         {
-            animator.SetBool("isJumping", true);
+            return;
+        }
+
+        if (jumpsRemaining > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+            jumpsRemaining--;
+            if (animator != null)
+            {
+                animator.SetBool("isJumping", true);
+            }
         }
     }
 
@@ -333,12 +383,20 @@ public class MesospherePlayerMovement : MonoBehaviour
             Color color = frostOverlay.color;
             color.a = currentFrostLevel * maxFrostAlpha;
             frostOverlay.color = color;
-            Debug.Log($"Frost level: {currentFrostLevel}, Alpha: {color.a}");
 
             // Check if zone is defrosted
             if (weatherController.currentTemperature >= minTemperatureToExit)
             {
                 isFrostZoneDefrosted = true;
+                // Restore normal movement even if still in zone
+                moveSpeed = originalMoveSpeed;
+                jumpPower = originalJumpPower;
+            }
+            else if (isGrounded) // Only apply frost restrictions if grounded
+            {
+                // Reapply frost restrictions if temperature drops again
+                moveSpeed = originalMoveSpeed * frostZoneMoveSpeedMultiplier;
+                jumpPower = originalJumpPower * frostZoneJumpMultiplier;
             }
         }
     }
@@ -371,6 +429,7 @@ public class MesospherePlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
+            jumpsRemaining = maxJumps; // Reset jumps when touching ground
             if (animator != null)
             {
                 animator.SetBool("isJumping", false);
@@ -401,5 +460,33 @@ public class MesospherePlayerMovement : MonoBehaviour
         meteorWarningIndicator.SetActive(true);
         yield return new WaitForSeconds(meteorWarningTime);
         meteorWarningIndicator.SetActive(false);
+    }
+
+    public void Damage(float damageAmount)
+    {
+        if (isShieldActive)
+        {
+            return;
+        }
+
+        PlayerHealth playerHealth = GetComponent<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            playerHealth.Damage(damageAmount);
+        }
+    }
+
+    public void Damage(float damageAmount, float KBForce, Vector2 KBAngle)
+    {
+        if (isShieldActive)
+        {
+            return;
+        }
+
+        PlayerHealth playerHealth = GetComponent<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            playerHealth.Damage(damageAmount, KBForce, KBAngle);
+        }
     }
 }
