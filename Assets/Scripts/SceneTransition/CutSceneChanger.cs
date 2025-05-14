@@ -14,10 +14,18 @@ public class CutSceneChanger : MonoBehaviour
 
     private void Start()
     {
-        // Hide the RawImage initially
-        //rawImage.gameObject.SetActive(false);
+        Debug.Log("CutSceneChanger Start");
+        
+        // Make sure VideoPlayer is enabled
+        if (!videoPlayer.enabled)
+        {
+            videoPlayer.enabled = true;
+        }
 
-        videoPlayer.audioOutputMode = VideoAudioOutputMode.None;
+        // Set up video with audio
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+        videoPlayer.SetTargetAudioSource(0, audioSource);
+        videoPlayer.frame = 0; // Ensure we start from the first frame
         videoPlayer.Prepare();
 
         videoPlayer.prepareCompleted += OnVideoPrepare;
@@ -26,16 +34,31 @@ public class CutSceneChanger : MonoBehaviour
 
     void OnVideoPrepare(VideoPlayer vp)
     {
-        // Show RawImage only when ready
+        Debug.Log("Video Prepared");
+        
+        // Make sure RawImage is enabled and visible
+        if (!rawImage.gameObject.activeInHierarchy)
+        {
+            rawImage.gameObject.SetActive(true);
+        }
+        
         rawImage.texture = videoPlayer.texture;
-        //rawImage.gameObject.SetActive(true);
-
+        videoPlayer.frame = 0; // Double check we're at the start
         videoPlayer.Play();
-        audioSource.Play();
     }
 
     void OnVideoEnd(VideoPlayer vp)
     {
         SceneManager.LoadScene(nextScene);
+    }
+
+    private void Update()
+    {
+        // Keep RawImage enabled
+        if (!rawImage.gameObject.activeInHierarchy)
+        {
+            Debug.Log("RawImage was disabled, re-enabling");
+            rawImage.gameObject.SetActive(true);
+        }
     }
 }

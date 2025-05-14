@@ -13,6 +13,12 @@ public class Dialogue : MonoBehaviour
     private int index;
     public float typingSpeed;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip talkingSound;
+    public float minPitch = 0.9f;
+    public float maxPitch = 1.1f;
+
     public GameObject continueButton;
     public GameObject TrimmerPrefab;
     public GameObject dialogueBox;
@@ -49,11 +55,19 @@ public class Dialogue : MonoBehaviour
         {
             Debug.LogWarning("Continue button text component is missing!");
         }
+
+        // Set up audio source
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+            Debug.Log("Added AudioSource component");
+        }
     }
 
     void Update()
     {
-        if (textDisplay.text == sentences[index] && dialogueBox.activeSelf)
+        // Keep the continue button visible while dialogue is active
+        if (dialogueBox.activeSelf)
         {
             continueButton.SetActive(true);
         }
@@ -62,22 +76,62 @@ public class Dialogue : MonoBehaviour
     IEnumerator Type()
     {
         textDisplay.text = "";
-        Debug.Log("Typing sentence: " + sentences[index]);
+        Debug.Log($"Starting to type sentence {index}: {sentences[index]}");
+        
+        int letterCount = 0;
         foreach (char letter in sentences[index].ToCharArray())
         {
             textDisplay.text += letter;
+            letterCount++;
+
+            // Play sound every 3 letters
+            if (letterCount % 3 == 0)
+            {
+                PlayTalkingSound();
+            }
+
             yield return new WaitForSeconds(typingSpeed);
         }
+
+        Debug.Log($"Finished typing sentence {index}");
         continueButton.SetActive(true);
+    }
+
+    private void PlayTalkingSound()
+    {
+        if (talkingSound == null)
+        {
+            Debug.LogWarning("Talking sound is not assigned!");
+            return;
+        }
+
+        if (audioSource == null)
+        {
+            Debug.LogWarning("AudioSource is missing!");
+            return;
+        }
+
+        try
+        {
+            audioSource.pitch = Random.Range(minPitch, maxPitch);
+            audioSource.PlayOneShot(talkingSound, 0.2f);
+            Debug.Log("Played talking sound");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Error playing sound: {e.Message}");
+        }
     }
 
     public void NextSentence()
     {
+        Debug.Log($"NextSentence called. Current index: {index}, Total sentences: {sentences.Length}");
+        
         if (index < sentences.Length - 1)
         {
             index++;
             textDisplay.text = "";
-            continueButton.SetActive(false);
+            continueButton.SetActive(true);
 
             if (index == sentences.Length - 1 && continueBtnText != null)
             {
@@ -101,7 +155,8 @@ public class Dialogue : MonoBehaviour
             isTalking = true;
             PlayerMovement.isDialogueActive = true;
             dialogueBox.SetActive(true);
-            continueButton.SetActive(false);
+            // Keep continue button visible from the start
+            continueButton.SetActive(true);
             if (interactButton != null)
             {
                 interactButton.SetActive(false);
@@ -130,6 +185,12 @@ public class Dialogue : MonoBehaviour
     IEnumerator CloseDialogue()
     {
         yield return new WaitForSeconds(0.1f); // Small delay to ensure everything is processed
+        
+        // Stop any playing sounds
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+        }
         
         dialogueBox.SetActive(false);
         continueButton.SetActive(false);

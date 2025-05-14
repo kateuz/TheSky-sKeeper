@@ -36,7 +36,7 @@ public class MesospherePlayerMovement : MonoBehaviour, IDamageable
     [SerializeField] private GameObject meteorShield;
     [SerializeField] private Light2D shieldLight;
     [SerializeField] private float shieldPulseSpeed = 1f;
-    [SerializeField] private float shieldMinIntensity = 0.5f;
+    [SerializeField] private float shieldMinIntensity = 1f;
     [SerializeField] private float shieldMaxIntensity = 1f;
     [SerializeField] private Color shieldColor = new Color(0.4f, 0.6f, 1f, 1f);
     public bool isShieldActive { get; private set; } = false;
