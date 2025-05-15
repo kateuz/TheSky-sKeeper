@@ -3,11 +3,11 @@ using System.Collections;
 
 public class UVRaysScript : MonoBehaviour
 {
-    [Header("Meteor Settings")]
-    [SerializeField] private GameObject meteorPrefab;
+    [Header("UV Ray Settings")]
+    [SerializeField] private GameObject sunRayPrefab;
     [SerializeField] private float spawnInterval = 5f;
-    [SerializeField] private float spawnHeight = 10f; // Fixed spawn height
-    [SerializeField] private float meteorSpeed = 5f;
+    [SerializeField] private float spawnHeight = 10f;
+    [SerializeField] private float raySpeed = 5f;
     [SerializeField] private float damageAmount = 10f;
     [SerializeField] private GameObject hitEffectPrefab;
 
@@ -36,10 +36,10 @@ public class UVRaysScript : MonoBehaviour
             Debug.LogError("Main camera not found!");
         }
 
-        StartCoroutine(SpawnMeteors());
+        StartCoroutine(SpawnSunRays());
     }
 
-    private IEnumerator SpawnMeteors()
+    private IEnumerator SpawnSunRays()
     {
         while (true)
         {
@@ -50,36 +50,27 @@ public class UVRaysScript : MonoBehaviour
             // Spawn position at the top center of the camera view
             Vector3 spawnPosition = mainCamera.transform.position + new Vector3(0f, spawnHeight, 0f);
 
-            // Spawn meteor
-            GameObject meteor = Instantiate(meteorPrefab, spawnPosition, Quaternion.identity);
-            meteor.transform.SetParent(mainCamera.transform, true); // Make it a child of the camera
+            // Spawn sun ray
+            GameObject sunRay = Instantiate(sunRayPrefab, spawnPosition, Quaternion.identity);
+            sunRay.transform.SetParent(mainCamera.transform, true);
 
             // Calculate direction to player
             Vector2 directionToPlayer = (playerTransform.position - spawnPosition).normalized;
 
             // Add velocity towards player
-            Rigidbody2D rb = meteor.GetComponent<Rigidbody2D>();
+            Rigidbody2D rb = sunRay.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                rb.velocity = directionToPlayer * meteorSpeed;
-            }
-
-            // Ensure meteor is fully opaque
-            SpriteRenderer sr = meteor.GetComponent<SpriteRenderer>();
-            if (sr != null)
-            {
-                Color color = sr.color;
-                color.a = 1f;
-                sr.color = color;
+                rb.velocity = directionToPlayer * raySpeed;
             }
 
             // Add damage component
-            UVRayDamage UVrayDamage = meteor.AddComponent<UVRayDamage>();
-            UVrayDamage.damageAmount = damageAmount;
-            UVrayDamage.hitEffectPrefab = hitEffectPrefab;
+            UVRayDamage uvRayDamage = sunRay.AddComponent<UVRayDamage>();
+            uvRayDamage.damageAmount = damageAmount;
+            uvRayDamage.hitEffectPrefab = hitEffectPrefab;
 
             // Destroy after some time if it doesn't hit anything
-            Destroy(meteor, 10f);
+            Destroy(sunRay, 10f);
         }
     }
 }
@@ -89,16 +80,20 @@ public class UVRayDamage : MonoBehaviour
     public float damageAmount;
     public GameObject hitEffectPrefab;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log($"UV Ray hit something: {collision.gameObject.name}");
+        
         if (collision.gameObject.CompareTag("Killian"))
         {
-            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+            Debug.Log("UV Ray hit player!");
+            StratospherePlayerHealth playerHealth = collision.gameObject.GetComponent<StratospherePlayerHealth>();
             MesospherePlayerMovement playerMovement = collision.gameObject.GetComponent<MesospherePlayerMovement>();
 
             // Only damage if player doesn't have shield
             if (playerHealth != null && (playerMovement == null || !playerMovement.isShieldActive))
             {
+                Debug.Log("Applying UV damage to player!");
                 playerHealth.Damage(damageAmount);
 
                 // Spawn hit effect
@@ -106,6 +101,10 @@ public class UVRayDamage : MonoBehaviour
                 {
                     Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
                 }
+            }
+            else
+            {
+                Debug.Log("Player has shield active or health component missing");
             }
         }
         Destroy(gameObject);

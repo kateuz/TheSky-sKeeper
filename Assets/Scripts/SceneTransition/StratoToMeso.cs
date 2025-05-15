@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class WindCurrentTransportation : MonoBehaviour
+public class StratoToMeso : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Killian"))
         {
-            SceneManager.LoadScene("StratospherePt2");
-        } 
+            SceneManager.LoadScene("Mesosphere");
+        }
     }
 }
