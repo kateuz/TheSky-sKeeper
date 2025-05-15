@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     float horizontalMovement;
     bool isFacingRight = true;
     bool isGrounded = false;
-    int extraJumps;
+    int jumpsRemaining;
 
     [SerializeField] int extraJumpsValue = 1;
     [SerializeField] float moveSpeed = 5f;
@@ -46,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        extraJumps = extraJumpsValue;
+        jumpsRemaining = extraJumpsValue;
 
         //if (GameManager.Instance != null)
         //{
@@ -71,10 +71,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        extraJumps = extraJumpsValue;
 
         if (GameManager.Instance != null)
         {
@@ -164,16 +162,11 @@ public class PlayerMovement : MonoBehaviour
     public void Jump()
     {
         if (isDialogueActive) return;
-
-        if (isGrounded || extraJumps > 0)
+        if (jumpsRemaining > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+            jumpsRemaining--;
             animator.SetBool("isJumping", true);
-
-            if (!isGrounded)
-            {
-                extraJumps--;
-            }
         }
     }
     public void Move(InputAction.CallbackContext context)
@@ -247,7 +240,7 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
-            extraJumps = extraJumpsValue;
+            jumpsRemaining = extraJumpsValue;
             animator.SetBool("isJumping", false);
         }
     }

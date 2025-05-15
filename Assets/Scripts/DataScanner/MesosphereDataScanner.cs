@@ -20,8 +20,8 @@ public class MesosphereDataScanner : MonoBehaviour
     [Header("QR Code Settings")]
     [Tooltip("The URL that the QR code will redirect to")]
     public string redirectUrl = "https://drive.google.com/file/d/149nGyY4pS5GjB7ED6ROjQx2lMlnsWeVZ/view?usp=drive_link";
-    [Tooltip("Additional data to include in the QR code")]
-    public string additionalData = "";
+    //[Tooltip("Additional data to include in the QR code")]
+    //public string additionalData = "";
 
     private bool isPlayerInRange = false;
     private Texture2D qrCodeTexture;
@@ -81,10 +81,10 @@ public class MesosphereDataScanner : MonoBehaviour
 
         // Generate QR code with URL
         string qrData = redirectUrl;
-        if (!string.IsNullOrEmpty(additionalData))
-        {
-            qrData += "?data=" + System.Uri.EscapeDataString(additionalData);
-        }
+        //if (!string.IsNullOrEmpty(additionalData))
+        //{
+        //    qrData += "?data=" + System.Uri.EscapeDataString(additionalData);
+        //}
         GenerateQRCode(qrData);
 
         // Show QR code
@@ -102,7 +102,6 @@ public class MesosphereDataScanner : MonoBehaviour
             qrCodeDisplay.gameObject.SetActive(false);
         }
 
-        // Save data (you can add your data saving logic here)
         SaveData();
 
         // Transition to cutscene
