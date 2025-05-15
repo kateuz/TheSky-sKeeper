@@ -24,6 +24,12 @@ EditorBuildSettings:
     path: Assets/Scenes/P3Troposphere.unity
     guid: eb3ae94ef38a70c41926a3a460ce5b2c
   - enabled: 1
+    path: Assets/Scenes/Stratosphere.unity
+    guid: 139773df097e79e4c9664dad4a0f635f
+  - enabled: 1
+    path: Assets/Scenes/StratospherePt2.unity
+    guid: f1d337cbdae43ac489abe0203aa4b7f1
+  - enabled: 1
     path: Assets/Scenes/Mesosphere.unity
     guid: 81fdc020681f40b44a5ab54fdb1fef39
   - enabled: 1

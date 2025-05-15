@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ad78814de360645be66265f8a14c92, type: 3}
+  m_Name: BlobEnemy 1
+  m_EditorClassIdentifier: 
+  maxHealth: 30
+  deathParticle: {fileID: 38875062278680072, guid: 491a8720f07a0bb44ab64b58dd544954, type: 3}
+  deathDebris:
+  - {fileID: 38875062278680072, guid: 491a8720f07a0bb44ab64b58dd544954, type: 3}
+  - {fileID: 5211442186248481188, guid: f11e25167bf86e5488e75b6042862783, type: 3}
+  speed: 5
+  cliffCheckDistance: 1.5
+  playerDetectDistance: 5
+  detectionPauseTime: 1
+  playerDetectedWaitTime: 0
+  chargeTime: 4.5
+  chargeSpeed: 7
+  meleeDetectDistance: 0
+  damageAmount: 15
+  knockbackAngle: {x: 7, y: 1}
+  knockbackForce: 10

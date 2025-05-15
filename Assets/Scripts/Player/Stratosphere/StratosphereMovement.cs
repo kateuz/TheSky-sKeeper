@@ -19,7 +19,7 @@ public class StratosphereMovement : MonoBehaviour
     float horizontalMovement;
     bool isFacingRight = true;
     bool isGrounded = false;
-    int extraJumps;
+    private int jumpsRemaining; // Track remaining jumps
 
     [SerializeField] int extraJumpsValue = 1;
     [SerializeField] float moveSpeed = 5f;
@@ -46,7 +46,7 @@ public class StratosphereMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        extraJumps = extraJumpsValue;
+        jumpsRemaining = extraJumpsValue; // Initialize jumps
 
         //if (GameManager.Instance != null)
         //{
@@ -74,7 +74,6 @@ public class StratosphereMovement : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        extraJumps = extraJumpsValue;
 
         if (GameManager.Instance != null)
         {
@@ -165,14 +164,13 @@ public class StratosphereMovement : MonoBehaviour
     {
         if (isDialogueActive) return;
 
-        if (isGrounded || extraJumps > 0)
+        if (jumpsRemaining > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
-            animator.SetBool("isJumping", true);
-
-            if (!isGrounded)
+            jumpsRemaining--;
+            if (animator != null)
             {
-                extraJumps--;
+                animator.SetBool("isJumping", true);
             }
         }
     }
@@ -247,8 +245,11 @@ public class StratosphereMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
-            extraJumps = extraJumpsValue;
-            animator.SetBool("isJumping", false);
+            jumpsRemaining = extraJumpsValue; // Reset jumps when touching ground
+            if (animator != null)
+            {
+                animator.SetBool("isJumping", false);
+            }
         }
     }
 
